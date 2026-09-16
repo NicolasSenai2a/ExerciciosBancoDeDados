@@ -90,3 +90,24 @@ INSERT INTO pecas_os (os_id, nome_peca, quantidade, valor_unitario) VALUES
 (4, 'Bateria 60Ah', 1, 420.00);
 
 
+Select veiculos.modelo, 
+veiculos.marca,
+veiculos.placa,
+clientes.nome,
+clientes.telefone 
+from veiculos JOIN clientes on veiculos.cliente_id = clientes.id
+
+Select ordens_servico.id,
+ordens_servico.status,
+ordens_servico.data_abertura,
+veiculos.placa, veiculos.modelo,
+mecanicos.nome 
+from ordens_servico JOIN veiculos on ordens_servico.veiculo_id = veiculos.id JOIN clientes on veiculos.cliente_id = clientes.id 
+JOIN mecanicos on ordens_servico.mecanico_id = mecanicos.id 
+
+Select ordens_servico.id,
+ordens_servico.valor_mao_obra,
+mecanicos.nome,
+veiculos.placa
+
+
