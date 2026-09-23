@@ -62,15 +62,7 @@ INSERT INTO exames_consulta (consulta_id, nome_exame, valor_exame) VALUES
 (2, 'Hemograma Completo', 45.00),
 (3, 'Exame de Urina', 30.00);
 
-SELECT 
-    m.nome AS medico,
-    m.crm,
-    e.nome AS especialidade,
-    m.valor_consulta
-FROM medicos m
-JOIN especialidades e ON m.especialidade_id = e.id
-ORDER BY m.valor_consulta DESC;
-
+CREATE VIEW vw_relacao1 AS
 SELECT 
     c.id AS consulta_id,
     c.data_hora,
@@ -81,9 +73,9 @@ FROM consultas c
 JOIN pacientes p ON c.paciente_id = p.id
 JOIN medicos m ON c.medico_id = m.id
 JOIN especialidades e ON m.especialidade_id = e.id
-WHERE p.nome = 'Carlos Silva'
-ORDER BY c.data_hora ASC;
+WHERE p.nome = 'Carlos Silva';
 
+CREATE VIEW vw_relacao2 AS
 SELECT 
     c.id AS consulta_id,
     p.nome AS paciente,
@@ -95,9 +87,9 @@ FROM consultas c
 JOIN pacientes p ON c.paciente_id = p.id
 JOIN medicos m ON c.medico_id = m.id
 LEFT JOIN exames_consulta ex ON c.id = ex.consulta_id
-GROUP BY c.id, p.nome, m.nome, m.valor_consulta
-ORDER BY c.id;
+GROUP BY c.id, p.nome, m.nome, m.valor_consulta;
 
+CREATE VIEW vw_relacao3 AS
 SELECT 
     m.nome AS medico,
     m.crm,
@@ -107,6 +99,7 @@ FROM medicos m
 JOIN especialidades e ON m.especialidade_id = e.id
 WHERE m.valor_consulta > 300.00;
 
+CREATE VIEW vw_relacao4 AS
 SELECT 
     e.nome AS especialidade,
     COUNT(c.id) AS quantidade_consultas,
@@ -114,10 +107,41 @@ SELECT
 FROM especialidades e
 JOIN medicos m ON e.id = m.especialidade_id
 LEFT JOIN consultas c ON m.id = c.medico_id AND c.status = 'Realizada'
-GROUP BY e.id, e.nome
-ORDER BY faturamento_consultas DESC;
+GROUP BY e.id, e.nome;
 
+-- Consultas do Sistema de Oficina / Veículos
 
+CREATE VIEW vw_relacao5 AS
+SELECT 
+    veiculos.modelo, 
+    veiculos.marca,
+    veiculos.placa,
+    clientes.nome,
+    clientes.telefone 
+FROM veiculos 
+JOIN clientes ON veiculos.cliente_id = clientes.id;
 
+CREATE VIEW vw_relacao6 AS
+SELECT 
+    ordens_servico.id,
+    ordens_servico.status,
+    ordens_servico.data_abertura,
+    veiculos.placa, 
+    veiculos.modelo,
+    mecanicos.nome 
+FROM ordens_servico 
+JOIN veiculos ON ordens_servico.veiculo_id = veiculos.id 
+JOIN clientes ON veiculos.cliente_id = clientes.id 
+JOIN mecanicos ON ordens_servico.mecanico_id = mecanicos.id;
+
+CREATE VIEW vw_relacao7 AS
+SELECT 
+    ordens_servico.id,
+    ordens_servico.valor_mao_obra,
+    mecanicos.nome,
+    veiculos.placa
+FROM ordens_servico
+JOIN mecanicos ON ordens_servico.mecanico_id = mecanicos.id
+JOIN veiculos ON ordens_servico.veiculo_id = veiculos.id;
 
 --OBS: Usei a ajuda do repositorio em algumas partes

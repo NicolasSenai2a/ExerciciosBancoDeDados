@@ -74,7 +74,7 @@ INSERT INTO clientes (nome, email, telefone, cpf) values
 
 INSERT INTO mecanicos (nome, especialidade, valor_hora) values
 ('Davi Pedrinho', 'Motor e Câmbio', 7.37),
-('Ederson Arantes', 'runaitocarlos@hotmail.com', 20.00),
+('Ederson Arantes', 'runaitocarlos@hotmail.com', 20.00),A
 ('Neymar Junior', 'Elétrica e Injeção', 14.99);
 
 INSERT INTO ordens_servico (veiculo_id, mecanico_id, valor_mao_obra, status) VALUES 
@@ -89,7 +89,7 @@ INSERT INTO pecas_os (os_id, nome_peca, quantidade, valor_unitario) VALUES
 (2, 'Pastilha de Freio Dianteira', 1, 150.00),
 (4, 'Bateria 60Ah', 1, 420.00);
 
-
+create view vw_relacao1 AS
 Select veiculos.modelo, 
 veiculos.marca,
 veiculos.placa,
@@ -97,6 +97,7 @@ clientes.nome,
 clientes.telefone 
 from veiculos JOIN clientes on veiculos.cliente_id = clientes.id
 
+create view vw_relacao2 AS
 Select ordens_servico.id,
 ordens_servico.status,
 ordens_servico.data_abertura,
@@ -105,9 +106,8 @@ mecanicos.nome
 from ordens_servico JOIN veiculos on ordens_servico.veiculo_id = veiculos.id JOIN clientes on veiculos.cliente_id = clientes.id 
 JOIN mecanicos on ordens_servico.mecanico_id = mecanicos.id 
 
+create view vw_relacao3 AS
 Select ordens_servico.id,
 ordens_servico.valor_mao_obra,
 mecanicos.nome,
 veiculos.placa
-
-
