@@ -65,4 +65,3 @@ INSERT INTO itens_matricula (matricula_id, modalidade_id, duracao_meses, valor_m
 (3, 3, 12, 90.00, 0.00),
 (4, 1, 1, 220.00, 50.00);
 
-

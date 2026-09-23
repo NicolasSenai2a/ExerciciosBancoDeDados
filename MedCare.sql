@@ -144,4 +144,5 @@ FROM ordens_servico
 JOIN mecanicos ON ordens_servico.mecanico_id = mecanicos.id
 JOIN veiculos ON ordens_servico.veiculo_id = veiculos.id;
 
+
 --OBS: Usei a ajuda do repositorio em algumas partes
