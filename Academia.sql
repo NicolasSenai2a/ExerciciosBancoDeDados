@@ -65,3 +65,60 @@ INSERT INTO itens_matricula (matricula_id, modalidade_id, duracao_meses, valor_m
 (3, 3, 12, 90.00, 0.00),
 (4, 1, 1, 220.00, 50.00);
 
+CREATE VIEW vw_relacao1 AS
+SELECT 
+    modalidades.nome AS modalidade,
+    modalidades.sala,
+    planos.nome AS plano,
+    planos.valor_mensal * 1.10 AS valor_mensal_ajustado
+FROM modalidades 
+JOIN planos ON modalidades.plano_id = planos.id;
+
+CREATE VIEW vw_relacao2 AS
+SELECT 
+    alunos.nome AS aluno,
+    alunos.cpf,
+    modalidades.nome AS modalidade,
+    modalidades.sala,
+    matriculas.duracao_meses,
+    matriculas.data_inicio
+FROM matriculas 
+JOIN alunos ON matriculas.aluno_id = alunos.id
+JOIN itens_matricula ON matriculas.id = itens_matricula.matricula_id
+JOIN modalidades ON itens_matricula.modalidade_id = modalidades.id
+WHERE matriculas.status = 'Ativa';
+
+CREATE VIEW vw_relacao3 AS
+SELECT 
+    alunos.nome AS aluno, 
+    COUNT(matriculas.id) AS total_matriculas, 
+    SUM((itens_matricula.valor_mensal_aplicado * itens_matricula.duracao_meses) + itens_matricula.taxa_adesao) AS total_investido
+FROM alunos
+JOIN matriculas ON alunos.id = matriculas.aluno_id
+JOIN itens_matricula ON matriculas.id = itens_matricula.matricula_id
+WHERE matriculas.status = 'Ativa'
+GROUP BY alunos.id, alunos.nome
+HAVING SUM((itens_matricula.valor_mensal_aplicado * itens_matricula.duracao_meses) + itens_matricula.taxa_adesao) > 1000.00;
+
+CREATE VIEW vw_relacao4 AS
+SELECT 
+    modalidades.*, 
+    planos.nome AS plano, 
+    planos.valor_mensal_base
+FROM modalidades
+JOIN planos ON modalidades.plano_id = planos.id
+WHERE modalidades.capacidade_maxima >= 15 
+  AND planos.valor_mensal_base > 100.00 
+  AND modalidades.disponivel = TRUE;
+
+CREATE VIEW vw_relacao5 AS
+SELECT 
+    planos.nome AS plano, 
+    SUM((itens_matricula.valor_mensal_aplicado * itens_matricula.duracao_meses) + itens_matricula.taxa_adesao) AS faturamento_total,
+    ROUND(AVG(itens_matricula.duracao_meses), 1) AS media_meses_contratados
+FROM itens_matricula
+JOIN matriculas ON itens_matricula.matricula_id = matriculas.id
+JOIN modalidades ON itens_matricula.modalidade_id = modalidades.id
+JOIN planos ON modalidades.plano_id = planos.id
+WHERE matriculas.status = 'Ativa'
+GROUP BY planos.nome;
